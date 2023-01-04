@@ -19,11 +19,11 @@ export const useAuthStore = defineStore('auth', {
           password_confirmation: password_confirmation,
         })
         .then((response) => {
-          const user = response.data.user;
-          const token = response.data.token;
+          const user = JSON.stringify(response.data.user);
+          const token = JSON.stringify(response.data.token);
           
-          this.user = user;
-          this.token = token;
+          this.user = response.data.user;
+          this.token = response.data.token;
           
           localStorage.setItem('user', user);
           localStorage.setItem('token', token);
@@ -36,11 +36,11 @@ export const useAuthStore = defineStore('auth', {
           password: password,
         })
         .then((response) => {
-          const user = response.data.user;
-          const token = response.data.token;
+          const user = JSON.stringify(response.data.user);
+          const token = JSON.stringify(response.data.token);
           
-          this.user = user;
-          this.token = token;
+          this.user = response.data.user;
+          this.token = response.data.token;
           
           localStorage.setItem('user', user);
           localStorage.setItem('token', token);
