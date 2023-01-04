@@ -3,8 +3,11 @@ import { RouterLink } from 'vue-router';
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import * as yup from 'yup';
 import { useAuthStore } from '@/stores/auth';
+import { storeToRefs } from 'pinia';
+import router from '../router';
 
 const authStore = useAuthStore();
+const { user, token, message } = storeToRefs(useAuthStore());
 
 const schema = yup.object().shape({
   email: yup.string().required().email(),
@@ -14,7 +17,9 @@ const schema = yup.object().shape({
 const onSubmit = async (values) => {
   const { email, password } = values;
 
-  await authStore.login(email, password);
+  await authStore.login(email, password)
+    .then(() => router.push({ name: 'dashboard' }))
+    .catch(e => alert(e.response?.data.message));
 };
 </script>
 

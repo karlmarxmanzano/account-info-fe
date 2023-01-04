@@ -3,6 +3,7 @@ import { RouterLink } from 'vue-router';
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import * as yup from 'yup';
 import { useAuthStore } from '@/stores/auth';
+import router from '../router';
 
 const authStore = useAuthStore();
 
@@ -14,11 +15,12 @@ const schema = yup.object().shape({
 });
 
 const onSubmit = async (values) => {
-  alert(JSON.stringify(values));
-
   const { name, email, password, password_confirmation } = values;
 
-  await authStore.register(name, email, password, password_confirmation);
+  await authStore
+    .register(name, email, password, password_confirmation)
+    .then(() => router.push({ name: 'dashboard' }))
+    .catch(e => alert(e.response?.data.message));
 };
 </script>
 
@@ -39,7 +41,7 @@ const onSubmit = async (values) => {
             <div class="form-group mb-3">
               <label for="email">Email</label>
               <Field name="email" type="email" class="form-control" />
-              
+              <ErrorMessage name="email" />
             </div>
 
             <div class="form-group mb-3">
@@ -49,13 +51,13 @@ const onSubmit = async (values) => {
             </div>
 
             <div class="form-group mb-4">
-              <label for="confirmation_password">Confirm Password</label>
+              <label for="password_confirmation">Confirm Password</label>
               <Field
-                name="confirmation_password"
+                name="password_confirmation"
                 type="password"
                 class="form-control"
               />
-              <ErrorMessage name="confirmation_password" />
+              <ErrorMessage name="password_confirmation" />
             </div>
 
             <button type="submit" class="btn btn-primary w-100">Submit</button>

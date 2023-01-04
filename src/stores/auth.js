@@ -19,14 +19,14 @@ export const useAuthStore = defineStore('auth', {
           password_confirmation: password_confirmation,
         })
         .then((response) => {
-          const user = JSON.stringify(response.data.user);
-          const token = JSON.stringify(response.data.token);
-
+          const user = response.data.user;
+          const token = response.data.token;
+          
+          this.user = user;
+          this.token = token;
+          
           localStorage.setItem('user', user);
           localStorage.setItem('token', token);
-        })
-        .catch((e) => {
-          console.log(e);
         });
     },
     async login(email, password) {
@@ -36,31 +36,32 @@ export const useAuthStore = defineStore('auth', {
           password: password,
         })
         .then((response) => {
-          const user = JSON.stringify(response.data.user);
-          const token = JSON.stringify(response.data.token);
-
+          const user = response.data.user;
+          const token = response.data.token;
+          
+          this.user = user;
+          this.token = token;
+          
           localStorage.setItem('user', user);
           localStorage.setItem('token', token);
-        })
-        .catch((e) => {
-          if (e.response.code === 401) {
-            this.message = 'Invalid credentials';
-          }
         });
     },
     async logout() {
       await axios
-        .post(`${baseUrl}/logout`, {}, {
-          headers: { Authorization: `Bearer ${this.token}` },
-        })
+        .post(
+          `${baseUrl}/logout`,
+          {},
+          {
+            headers: { Authorization: `Bearer ${this.token}` },
+          }
+        )
         .then((response) => {
           this.user = null;
           this.token = null;
 
           localStorage.removeItem('user');
           localStorage.removeItem('token');
-        })
-        .catch((e) => console.log(e));
+        });
     },
   },
 });
